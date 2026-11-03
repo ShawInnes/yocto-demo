@@ -1,3 +1,16 @@
-build/
-layers/
-pki/dev/*.key
+# Build output and caches (kas/BitBake can recreate these).
+/build/
+/downloads/
+/sstate-cache/
+/layers/
+/.kas_shell_history
+
+# External layers: fetched and pinned by kas, not Git submodules.
+/poky/
+/meta-arm/
+/meta-rockchip/
+/meta-rauc/
+/meta-rauc-community/
+
+# Local signing material; unused by this build.
+/pki/

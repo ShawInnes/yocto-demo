@@ -5,11 +5,17 @@ header:
 machine: qemuarm64
 
 repos:
-  meta-kvm:
-    path: meta-kvm
+  meta-demo:
+    path: meta-demo
 
 local_conf_header:
   rauc-wic: |
     WKS_FILE = "rauc-qemuarm64.wks"
-    WKS_SEARCH_PATH:prepend = "${TOPDIR}/../meta-kvm/wic:"
-    IMAGE_FSTYPES = "wic"
+    WKS_SEARCH_PATH:prepend = "${TOPDIR}/../meta-demo/wic:"
+    IMAGE_FSTYPES = "wic wic.bmap"
+    WKS_FILE_DEPENDS:append = " grub-efi dosfstools-native mtools-native"
+    QB_DEFAULT_FSTYPE = "wic"
+    QB_FSINFO = "wic:no-kernel-in-fs"
+    QB_KERNEL_ROOT = "/dev/vda2"
+    QB_KERNEL_CMDLINE_APPEND:append = " rauc.slot=A"
+    EXTRA_IMAGE_FEATURES:append = " debug-tweaks"

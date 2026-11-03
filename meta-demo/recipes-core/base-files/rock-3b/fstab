@@ -1,0 +1,3 @@
+# Radxa Rock 3B
+proc       /proc  proc  defaults  0 0
+/dev/mmcblk1p12 /data ext4 defaults 0 2
