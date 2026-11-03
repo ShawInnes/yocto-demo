@@ -2,13 +2,15 @@ header:
   version: 14
 overrides:
   repos:
-    poky:
-      commit: b6ae714a1d1bfae8384654a13da15996cac64712
+    openembedded-core:
+      commit: ae5a301091f5b0574ea7444aab40b309b6d9f3f2
+    bitbake:
+      commit: 6e260eb6ab1631607ea414d9ff8ede1155faa5d9
+    meta-yocto:
+      commit: 79b6d87030178bed0088ad3b00aa6dfbabac37c4
     meta-arm:
-      commit: 0a4b911d9fd63ab29c4532a907fae3282dbdcfe4
+      commit: 673e8d7c5dcd14de58092eb73e6ecc5eee5c1735
     meta-rockchip:
-      commit: 9690180b7e9953361958c962b80d891eda8c1028
+      commit: 9d02575bfd9ca5e87c394f593f2bbdbdee914d4e
     meta-rauc:
-      commit: d63878f20eba7a85ecf53566e7a3377e78bb46ac
-    meta-rauc-community:
-      commit: 222c61275054974cdbd09bd5faa2b7a37ddbd840
+      commit: 38da0e5866a953e664001ba90b5edad68d68cd5d

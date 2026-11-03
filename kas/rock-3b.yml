@@ -3,3 +3,8 @@ header:
   includes:
     - kas/base.yml
 machine: rock-3b
+
+local_conf_header:
+  rock-3b: |
+    WKS_FILE = "rock-3b.wks.in"
+    EXTRA_IMAGE_FEATURES:append = " allow-empty-password empty-root-password allow-root-login"

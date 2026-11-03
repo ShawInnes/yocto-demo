@@ -5,29 +5,38 @@ distro: poky
 target: core-image-demo
 
 repos:
-  poky:
-    url: https://git.yoctoproject.org/poky
-    branch: scarthgap
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    branch: wrynose
+    path: layers/openembedded-core
     layers:
       meta:
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    branch: "2.18"
+    path: layers/bitbake
+    layers: {}
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    branch: wrynose
+    path: layers/meta-yocto
+    layers:
       meta-poky:
   meta-arm:
     url: https://git.yoctoproject.org/meta-arm
-    branch: scarthgap
+    branch: wrynose
+    path: layers/meta-arm
     layers:
       meta-arm:
       meta-arm-toolchain:
   meta-rockchip:
     url: https://git.yoctoproject.org/meta-rockchip
-    branch: scarthgap
+    branch: wrynose
+    path: layers/meta-rockchip
   meta-rauc:
     url: https://github.com/rauc/meta-rauc
-    branch: scarthgap
-  meta-rauc-community:
-    url: https://github.com/rauc/meta-rauc-community
-    branch: scarthgap
-    layers:
-      meta-rauc-rockchip:
+    branch: wrynose
+    path: layers/meta-rauc
   meta-demo:
     path: meta-demo
 
@@ -35,6 +44,5 @@ local_conf_header:
   base: |
     INIT_MANAGER = "systemd"
     DISTRO_FEATURES:append = " rauc"
-    IMAGE_INSTALL:append = " rauc"
     IMAGE_FSTYPES:append = " wic wic.bmap"
     BB_GENERATE_MIRROR_TARBALLS = "1"

@@ -5,12 +5,5 @@
 /layers/
 /.kas_shell_history
 
-# External layers: fetched and pinned by kas, not Git submodules.
-/poky/
-/meta-arm/
-/meta-rockchip/
-/meta-rauc/
-/meta-rauc-community/
-
 # Local signing material; unused by this build.
 /pki/

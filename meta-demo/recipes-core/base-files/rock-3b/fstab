@@ -1,3 +1,3 @@
-# Radxa Rock 3B
-proc       /proc  proc  defaults  0 0
-/dev/mmcblk1p12 /data ext4 defaults 0 2
+# Mount by label so SD/eMMC enumeration does not matter.
+proc /proc proc defaults 0 0
+LABEL=data /data ext4 defaults,nofail 0 2

@@ -11,11 +11,12 @@ repos:
 local_conf_header:
   rauc-wic: |
     WKS_FILE = "rauc-qemuarm64.wks"
-    WKS_SEARCH_PATH:prepend = "${TOPDIR}/../meta-demo/wic:"
     IMAGE_FSTYPES = "wic wic.bmap"
     WKS_FILE_DEPENDS:append = " grub-efi dosfstools-native mtools-native"
     QB_DEFAULT_FSTYPE = "wic"
     QB_FSINFO = "wic:no-kernel-in-fs"
     QB_KERNEL_ROOT = "/dev/vda2"
     QB_KERNEL_CMDLINE_APPEND:append = " rauc.slot=A"
-    EXTRA_IMAGE_FEATURES:append = " debug-tweaks"
+    EXTRA_IMAGE_FEATURES:append = " allow-empty-password empty-root-password allow-root-login"
+    # The demo runs with a serial console; avoid the host OpenGL/LLVM stack.
+    PACKAGECONFIG:remove:pn-qemu-system-native = " sdl virglrenderer epoxy alsa"
