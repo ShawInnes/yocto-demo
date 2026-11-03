@@ -5,13 +5,13 @@ KAS_FILE ?= kas/qemuarm64.yml
 
 .PHONY: help checkout build shell run clean build-rock3b shell-rock3b
 help:
-	@echo "make checkout  Fetch the pinned Yocto layers"
-	@echo "make build     Build the QEMU ARM64 test image"
+	@echo "make checkout      Fetch the pinned Yocto layers"
+	@echo "make build         Build the QEMU ARM64 test image"
 	@echo "make build-rock3b  Build the ROCK 3B image (unvalidated)"
 	@echo "make shell-rock3b  Open the ROCK 3B build shell"
-	@echo "make clean     Remove build output; keep downloads and sstate"
-	@echo "make shell     Open the kas build shell"
-	@echo "make run       Boot the built image in QEMU (Ctrl-A X to exit)"
+	@echo "make clean         Remove build output; keep downloads and sstate"
+	@echo "make shell         Open the kas build shell"
+	@echo "make run           Boot the built image in QEMU (Ctrl-A X to exit)"
 
 checkout:
 	$(KAS_CONTAINER) checkout $(KAS_FILE)
