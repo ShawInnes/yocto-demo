@@ -1,7 +1,7 @@
 header:
   version: 14
 
-distro: poky
+distro: radxa-demo
 target: core-image-demo
 
 repos:
@@ -42,8 +42,6 @@ repos:
 
 local_conf_header:
   base: |
-    INIT_MANAGER = "systemd"
-    DISTRO_FEATURES:append = " rauc"
     IMAGE_FSTYPES:append = " wic wic.bmap"
     BB_GENERATE_MIRROR_TARBALLS = "1"
     BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"

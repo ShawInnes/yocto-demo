@@ -9,7 +9,9 @@ QEMU also has an EFI boot partition; ROCK 3B has Rockchip bootloader partitions.
 
 kas selects a machine, checks out the revisions in `kas/base.lock.yml`, and
 configures BitBake. Both targets include `kas/base.yml`, which selects the
-Poky distribution, systemd, RAUC support and the `core-image-demo` target.
+`radxa-demo` distribution and the `core-image-demo` target. The distro
+configuration in `meta-demo/conf/distro/radxa-demo.conf` inherits Poky defaults
+and owns the OS identity, systemd selection and RAUC feature policy.
 
 ```mermaid
 flowchart TD
@@ -31,7 +33,7 @@ adds this demo's image, machine configuration, recipe overrides and disk layouts
 ```mermaid
 flowchart BT
     core["OpenEmbedded-Core: meta<br/>base recipes + qemuarm64 machine"] --> demo["meta-demo<br/>core-image-demo + machine-specific integration"]
-    poky["meta-yocto: meta-poky<br/>distribution policy"] --> demo
+    poky["meta-yocto: meta-poky<br/>inherited distribution defaults"] --> demo
     arm["meta-arm + meta-arm-toolchain<br/>ARM platform and toolchain support"] --> bsp["meta-rockchip<br/>Rockchip BSP recipes and includes"]
     bsp --> demo
     rauc["meta-rauc<br/>RAUC recipes and integration"] --> demo
@@ -42,6 +44,12 @@ All of these layers are enabled by the shared configuration, including the
 Rockchip layers for QEMU. The local `rock-3b.conf` uses the BSP's RK3568 include;
 QEMU uses the upstream `qemuarm64` machine. Local `.bbappend` files supply fstab,
 RAUC configuration/keyring and the ROCK 3B kernel compatibility setting.
+
+The distro identifies itself as **Radxa Demo Linux 0.1** in `/etc/os-release`
+and the login banner. Its message of the day describes the current demo
+limitations. Image packages stay in `core-image-demo.bb`; hardware settings
+stay in machine/BSP configuration, and layer pins and build settings stay in
+kas. Creating this distro does not make the demo production-ready.
 
 ## Runtime and disk layout
 
@@ -176,8 +184,9 @@ Repository contents:
 - `Makefile`, `README.md`, `.gitignore`: commands, instructions and ignore rules.
 - `kas/`: build configurations and the commit lockfile. Keep the lockfile for
   reproducible layer checkouts; `rock-3b.yml` retains the hardware configuration.
-- `meta-demo/`: our Yocto layer, image recipe, disk layout, machine-specific
-  fstab/RAUC settings and the public test keyring required by the image.
+- `meta-demo/`: our Yocto layer, distro policy and identity, image recipe, disk
+  layout, machine-specific fstab/RAUC settings and the public test keyring
+  required by the image.
 
 kas downloads OpenEmbedded-Core, BitBake, meta-yocto and the external layers
 under `layers/`. These are ignored local checkouts, not submodules. All are

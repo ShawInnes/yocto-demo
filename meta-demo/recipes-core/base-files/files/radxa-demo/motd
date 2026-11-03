@@ -1,0 +1,5 @@
+Welcome to Radxa Demo Linux.
+
+This development image permits passwordless root access for testing.
+RAUC slots A/B are configured, but automatic boot switching and rollback
+are not enabled. Signed update bundles are not configured.
