@@ -1,0 +1,14 @@
+header:
+  version: 14
+overrides:
+  repos:
+    poky:
+      commit: b6ae714a1d1bfae8384654a13da15996cac64712
+    meta-arm:
+      commit: 0a4b911d9fd63ab29c4532a907fae3282dbdcfe4
+    meta-rockchip:
+      commit: 9690180b7e9953361958c962b80d891eda8c1028
+    meta-rauc:
+      commit: d63878f20eba7a85ecf53566e7a3377e78bb46ac
+    meta-rauc-community:
+      commit: 222c61275054974cdbd09bd5faa2b7a37ddbd840

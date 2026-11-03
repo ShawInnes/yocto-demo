@@ -1,0 +1,15 @@
+header:
+  version: 14
+  includes:
+    - kas/base.yml
+machine: qemuarm64
+
+repos:
+  meta-kvm:
+    path: meta-kvm
+
+local_conf_header:
+  rauc-wic: |
+    WKS_FILE = "rauc-qemuarm64.wks"
+    WKS_SEARCH_PATH:prepend = "${TOPDIR}/../meta-kvm/wic:"
+    IMAGE_FSTYPES = "wic"

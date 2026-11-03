@@ -1,0 +1,15 @@
+# QEMU ARM64 RAUC A/B disk layout
+
+# EFI System Partition
+part /boot --source bootimg-efi --sourceparams="loader=grub-efi" --ondisk sda --fstype=vfat --label boot --active --align 1024 --size 128
+
+# Root filesystem A
+part / --source rootfs --ondisk sda --fstype=ext4 --label rootfsA --align 1024 --size 1024
+
+# Root filesystem B
+part --ondisk sda --fstype=ext4 --label rootfsB --align 1024 --size 1024
+
+# Persistent data
+part /data --ondisk sda --fstype=ext4 --label data --align 1024 --size 256
+
+bootloader --ptable gpt --timeout=5

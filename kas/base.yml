@@ -1,0 +1,40 @@
+header:
+  version: 14
+
+distro: poky
+target: core-image-kvm
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: scarthgap
+    layers:
+      meta:
+      meta-poky:
+  meta-arm:
+    url: https://git.yoctoproject.org/meta-arm
+    branch: scarthgap
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+  meta-rockchip:
+    url: https://git.yoctoproject.org/meta-rockchip
+    branch: scarthgap
+  meta-rauc:
+    url: https://github.com/rauc/meta-rauc
+    branch: scarthgap
+  meta-rauc-community:
+    url: https://github.com/rauc/meta-rauc-community
+    branch: scarthgap
+    layers:
+      meta-rauc-rockchip:
+  meta-kvm:
+    path: meta-kvm
+
+local_conf_header:
+  base: |
+    INIT_MANAGER = "systemd"
+    DISTRO_FEATURES:append = " rauc"
+    IMAGE_INSTALL:append = " rauc"
+    IMAGE_FSTYPES:append = " wic wic.bmap"
+    BB_GENERATE_MIRROR_TARBALLS = "1"
