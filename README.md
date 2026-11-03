@@ -5,6 +5,73 @@ default target; the Radxa ROCK 3B configuration is unvalidated. Both images
 have rootfs A, an empty rootfs B, and a data partition.
 QEMU also has an EFI boot partition; ROCK 3B has Rockchip bootloader partitions.
 
+## Architecture and layers
+
+kas selects a machine, checks out the revisions in `kas/base.lock.yml`, and
+configures BitBake. Both targets include `kas/base.yml`, which selects the
+Poky distribution, systemd, RAUC support and the `core-image-demo` target.
+
+```mermaid
+flowchart TD
+    make["Makefile / kas-container"] --> qemu["kas/qemuarm64.yml<br/>machine: qemuarm64"]
+    make --> rock["kas/rock-3b.yml<br/>machine: rock-3b"]
+    qemu --> base["kas/base.yml + base.lock.yml<br/>shared settings + pinned revisions"]
+    rock --> base
+    base --> upstream["layers/ — fetched upstream sources"]
+    base --> demo["meta-demo/ — local integration layer"]
+    upstream --> bb["BitBake<br/>resolve recipes and build dependencies"]
+    demo --> bb
+    bb --> deploy["build/tmp/deploy/images/&lt;machine&gt;/<br/>Wic disk image, bmap, kernel, manifest"]
+```
+
+Yocto layers contribute recipes and configuration to one build; they are not
+separate runtime services. `meta-demo` combines the upstream components and
+adds this demo's image, machine configuration, recipe overrides and disk layouts.
+
+```mermaid
+flowchart BT
+    core["OpenEmbedded-Core: meta<br/>base recipes + qemuarm64 machine"] --> demo["meta-demo<br/>core-image-demo + machine-specific integration"]
+    poky["meta-yocto: meta-poky<br/>distribution policy"] --> demo
+    arm["meta-arm + meta-arm-toolchain<br/>ARM platform and toolchain support"] --> bsp["meta-rockchip<br/>Rockchip BSP recipes and includes"]
+    bsp --> demo
+    rauc["meta-rauc<br/>RAUC recipes and integration"] --> demo
+    demo --> image["Target image<br/>Linux + systemd + OpenSSH + RAUC"]
+```
+
+All of these layers are enabled by the shared configuration, including the
+Rockchip layers for QEMU. The local `rock-3b.conf` uses the BSP's RK3568 include;
+QEMU uses the upstream `qemuarm64` machine. Local `.bbappend` files supply fstab,
+RAUC configuration/keyring and the ROCK 3B kernel compatibility setting.
+
+## Runtime and disk layout
+
+Both Wic layouts populate rootfs A, reserve an empty ext4 rootfs B, and mount
+the data partition at `/data`. RAUC identifies slots by GPT partition label.
+The boot areas differ by target:
+
+```mermaid
+flowchart LR
+    subgraph qemu_disk["QEMU ARM64 disk"]
+        efi["EFI boot<br/>128 MiB"] --- qa["rootfsA<br/>populated, mounted at /"]
+        qa --- qb["rootfsB<br/>empty, inactive"]
+        qb --- qd["data<br/>mounted at /data"]
+    end
+    subgraph rock_disk["ROCK 3B microSD"]
+        loaders["Rockchip bootloader<br/>and reserved partitions"] --- ra["rootfsA<br/>populated, mounted at /"]
+        ra --- rb["rootfsB<br/>empty, inactive"]
+        rb --- rd["data<br/>mounted at /data"]
+    end
+```
+
+Rootfs partitions request 1024 MiB each and data requests 256 MiB; Wic can
+grow them to fit their contents. QEMU's runner loads the kernel directly and
+selects `/dev/vda2`; ROCK 3B uses U-Boot. Both pass `rauc.slot=A` and configure
+RAUC's `noop` backend. These are boot smoke-test images: the partition layout
+provides space for A/B updates, but boot selection, rollback and signed update
+bundles still need integration.
+
+## Build and run
+
 Requires Linux, Git, Make, a running Docker (or Podman), and `kas-container`
 on your PATH. Run as your normal user with access to the container engine.
 Allow plenty of disk space (about 100 GB) and time for the first build.
@@ -99,6 +166,10 @@ also required.
 
 `make shell-rock3b` opens its build environment. `make run` remains QEMU-only.
 The build directory and caches are shared; do not build both targets at once.
+`kas/base.yml` sets `BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"` so the hash-equivalence
+database shares the sstate cache location across builds rather than living in
+one build directory. With kas-container's shared `/sstate` mount, both persist
+in that mount.
 
 Repository contents:
 

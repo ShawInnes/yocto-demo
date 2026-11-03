@@ -46,3 +46,4 @@ local_conf_header:
     DISTRO_FEATURES:append = " rauc"
     IMAGE_FSTYPES:append = " wic wic.bmap"
     BB_GENERATE_MIRROR_TARBALLS = "1"
+    BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"
